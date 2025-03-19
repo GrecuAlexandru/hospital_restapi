@@ -1,0 +1,9 @@
+fastapi==0.110.0
+uvicorn[standard]==0.27.0
+pydantic[email]==2.6.1
+sqlalchemy==2.0.23
+passlib==1.7.4
+bcrypt==4.0.1
+python-multipart==0.0.9
+httpx==0.27.0
+alembic==1.13.0
