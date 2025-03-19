@@ -26,7 +26,7 @@ A RESTful API for hospital management.
 
 3. Install the required dependencies:
    ```bash
-   pip install fastapi uvicorn[standard] pydantic[email] sqlalchemy passlib==1.7.4 bcrypt==4.0.1 python-multipart httpx
+   pip install -r requirements.txt
    ```
 
 ## Usage
@@ -44,6 +44,163 @@ python run.py --with-fixtures
 ```
 
 The API will be available at http://localhost:8000
+
+## API Documentation
+
+### Authentication Endpoints
+
+- **POST /login**: Authenticate user
+  - Form data: `email`, `password`
+  - Returns user information if authentication is successful
+
+- **GET /me**: Get current user information
+  - Query parameter: `email`
+  - Returns authenticated user details
+
+### Doctor Endpoints
+
+- **GET /doctors/**: Get all doctors
+  - Query parameters: `skip`, `limit`, `current_user_email`
+  - Access limited to general managers
+
+- **POST /doctors/**: Create a new doctor
+  - Body: DoctorCreate schema
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **GET /doctors/{doctor_id}**: Get specific doctor
+  - Path parameter: `doctor_id`
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **PUT /doctors/{doctor_id}**: Update doctor information
+  - Path parameter: `doctor_id`
+  - Body: DoctorUpdate schema
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **DELETE /doctors/{doctor_id}**: Delete (deactivate) a doctor
+  - Path parameter: `doctor_id`
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+### Patient Endpoints
+
+- **GET /patients/**: Get all patients
+  - Query parameters: `skip`, `limit`, `current_user_email`
+  - Access limited to doctors and general managers
+
+- **POST /patients/**: Create a new patient
+  - Body: PatientCreate schema
+  - Query parameter: `current_user_email`
+  - Access limited to doctors and general managers
+
+- **GET /patients/{patient_id}**: Get specific patient
+  - Path parameter: `patient_id`
+  - Query parameter: `current_user_email`
+  - Access limited to doctors and general managers
+
+- **PUT /patients/{patient_id}**: Update patient information
+  - Path parameter: `patient_id`
+  - Body: PatientUpdate schema
+  - Query parameter: `current_user_email`
+  - Access limited to doctors and general managers
+
+- **DELETE /patients/{patient_id}**: Delete (deactivate) a patient
+  - Path parameter: `patient_id`
+  - Query parameter: `current_user_email`
+  - Access limited to doctors and general managers
+
+### Assistant Endpoints
+
+- **GET /assistants/**: Get all assistants
+  - Query parameters: `skip`, `limit`, `current_user_email`
+  - Access limited to general managers
+
+- **POST /assistants/**: Create a new assistant
+  - Body: AssistantCreate schema
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **GET /assistants/{assistant_id}**: Get specific assistant
+  - Path parameter: `assistant_id`
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **PUT /assistants/{assistant_id}**: Update assistant information
+  - Path parameter: `assistant_id`
+  - Body: AssistantUpdate schema
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **DELETE /assistants/{assistant_id}**: Delete (deactivate) an assistant
+  - Path parameter: `assistant_id`
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+
+- **GET /assistants/patients/assignments**: Get patient-assistant assignments
+  - Query parameters: `patient_id`, `assistant_id`, `current_user_email`
+  - Assistants can only view their own assignments
+
+- **POST /assistants/patients/assign**: Assign patient to assistant
+  - Body: PatientAssistantCreate schema
+  - Query parameter: `current_user_email`
+  - Access limited to doctors and general managers
+
+- **PUT /assistants/patients/assignments/{assignment_id}**: Update assignment
+  - Path parameter: `assignment_id`
+  - Body: PatientAssistantUpdate schema
+  - Query parameter: `current_user_email`
+  - Access limited to doctors and general managers
+
+- **POST /assistants/treatments/apply**: Record treatment application
+  - Body: TreatmentApplicationCreate schema
+  - Query parameter: `current_user_email`
+  - Access limited to assistants
+
+- **GET /assistants/treatments/applications**: Get treatment applications
+  - Query parameters: `treatment_id`, `assistant_id`, `current_user_email`
+  - Assistants can only see their own applications
+
+### Treatment Endpoints
+
+- **POST /treatments/**: Create a new treatment
+  - Body: TreatmentCreate schema
+  - Query parameter: `current_user_email`
+  - Doctors can only create treatments for their patients
+
+- **GET /treatments/**: Get all treatments
+  - Query parameters: `patient_id`, `doctor_id`, `skip`, `limit`, `current_user_email`
+  - Filtered based on user role
+
+- **GET /treatments/{treatment_id}**: Get specific treatment
+  - Path parameter: `treatment_id`
+  - Query parameter: `current_user_email`
+  - Access controlled based on user role
+
+- **PUT /treatments/{treatment_id}**: Update treatment
+  - Path parameter: `treatment_id`
+  - Body: TreatmentUpdate schema
+  - Query parameter: `current_user_email`
+  - Doctors can only update their treatments
+
+- **DELETE /treatments/{treatment_id}**: Delete a treatment
+  - Path parameter: `treatment_id`
+  - Query parameter: `current_user_email`
+  - Cannot delete treatments that have been applied
+
+### Report Endpoints
+
+- **GET /reports/doctors-patients**: Get doctors-patients report
+  - Query parameter: `current_user_email`
+  - Access limited to general managers
+  - Returns comprehensive statistics about doctors and their patients
+
+- **GET /reports/patients/{patient_id}/treatments**: Get patient treatments report
+  - Path parameter: `patient_id`
+  - Query parameter: `current_user_email`
+  - Doctors can only access reports for their patients
+  - General managers can access all reports
 
 ### Example Requests
 
