@@ -26,7 +26,7 @@ A RESTful API for hospital management.
 
 3. Install the required dependencies:
    ```bash
-   pip install fastapi uvicorn[standard] sqlalchemy passlib==1.7.4 bcrypt==4.0.1 python-multipart
+   pip install fastapi uvicorn[standard] pydantic[email] sqlalchemy passlib==1.7.4 bcrypt==4.0.1 python-multipart httpx
    ```
 
 ## Usage
@@ -47,7 +47,7 @@ The API will be available at http://localhost:8000
 
 ### Example Requests
 
-#### Login
+#### Login (This will work only if you have the fixtures)
 ```bash
 curl -X POST "http://localhost:8000/login" -d "email=admin@hospital.com&password=admin123" -H "Content-Type: application/x-www-form-urlencoded"
 ```
@@ -57,9 +57,9 @@ curl -X POST "http://localhost:8000/login" -d "email=admin@hospital.com&password
 curl -X GET "http://localhost:8000/doctors/?current_user_email=admin@hospital.com"
 ```
 
-#### Create a New Patient (as doctor)
+#### Create a New Patient (as admin)
 ```bash
-curl -X POST "http://localhost:8000/patients/?current_user_email=doctor@hospital.com" \
+curl -X POST "http://localhost:8000/patients/?current_user_email=admin@hospital.com" \
   -H "Content-Type: application/json" \
   -d '{"first_name": "John", "last_name": "Doe", "age": 45}'
 ```
