@@ -83,6 +83,29 @@ python tests/test_reports.py
 python tests/test_treatment.py
 ```
 
+## Docker
+
+### Running with Docker Compose
+
+For convenience, you can use Docker Compose:
+
+1. Start the application:
+   ```bash
+   docker-compose up
+   ```
+
+2. Start in detached mode:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Stop the application:
+   ```bash
+   docker-compose down
+   ```
+
+The API will be available at http://localhost:8000. The database is persisted through a volume mapping to your local filesystem.
+
 ## Security Vulnerabilities
 
 ### 1. Authentication Vulnerabilities
